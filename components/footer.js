@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-slate-900 text-white">
 
       <div className="max-w-7xl mx-auto px-6 py-20">
 
@@ -13,7 +13,7 @@ export default function Footer() {
           <div>
 
             <h2 className="text-3xl font-black">
-              ShopSphere
+              Shop<span className="text-blue-600">X</span>
             </h2>
 
             <p className="text-zinc-400 mt-4">
@@ -142,7 +142,7 @@ export default function Footer() {
         <div className="border-t border-zinc-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
 
           <p className="text-zinc-500">
-            © 2026 ShopSphere. All rights reserved.
+            © 2026 ShopX. All rights reserved.
           </p>
 
           <div className="flex gap-6 mt-4 md:mt-0">

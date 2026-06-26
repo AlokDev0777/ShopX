@@ -13,64 +13,71 @@ export async function GET() {
   const products = [
 
     {
-      title: "Blue sneakers",
-      description: "Comfortable everyday sneakers with a modern sporty design.",
-      price: 59.99,
-      image: "https://images.unsplash.com/photo-1519741491534-1e1a0e9b8c8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60",
-      category: "Footwear"
+      title: "minamilist",
+      description: "vitamin c serum for glowing skin",
+      price: 59,
+      image: "/minimalist.webp",
+      category: "perfume"
     },
 
     {
-      title: "Leather wallet",
-      description: "Premium quality wallet with multiple card slots.",
-      price: 29.99,
-      image: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=500&q=60",
-      category: "Accessories"
+      title: "fashwash",
+      description: "Gentle face wash for all skin types.",
+      price: 29,
+      image: "/fashwash.jpg",
+      category: "skincare"
     },
 
     {
-      title: "Gaming mouse",
-      description: "Ergonomic gaming mouse with RGB lighting.",
-      price: 49.99,
-      image: "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=500&q=60",
+      title: "Macbook Pro",
+      description: "Powerful laptop for professionals.",
+      price: 1299,
+      image: "/macbook.png",
       category: "Electronics"
     },
 
     {
-      title: "Wireless headphones",
-      description: "Noise-cancelling headphones with deep bass sound.",
-      price: 99.99,
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=60",
-      category: "Electronics"
+      title: "Laptop",
+      description: "Powerful gaming laptop for gamers",
+      price: 49999,
+      image: "/laptop.png",
+      category: "Electronics",
     },
 
     {
-      title: "Classic watch",
-      description: "Elegant wristwatch suitable for formal occasions.",
-      price: 120.00,
-      image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=60",
-      category: "Accessories"
+      title: "Organizer bag",
+      description: "Bag for organising your electronics items",
+      price: 999,
+      image: "/organizer bag.png",
+      category: "Electronics",
+    },
+    {
+      title: "Monitor",
+      description: "Best monitor for gaming with a refresh rate of 144hz",
+      price: 9999,
+      image: "/monitor.png",
+      category: "Electronics",
     },
 
-    {
-      title: "Yoga mat",
-      description: "Non-slip yoga mat perfect for home workouts.",
-      price: 25.50,
-      image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=60",
-      category: "Fitness"
-    },
 
     {
-      title: "Smartphone stand",
-      description: "Adjustable stand for phones and tablets.",
-      price: 14.99,
-      image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=60",
-      category: "Electronics"
-    }
+      title: "jeans",
+      description: "Comfortable jeans for everyday wear.",
+      price: 499,
+      image: "/jeans2.png",
+      category: "Clothing"
+    },
+
+     {
+      title: "t-shirt",
+      description: "Comfortable t-shirt for everyday wear.",
+      price: 1999,
+      image: "/t-shirt.png",
+      category: "Clothing"
+    },
+
 
   ];
-
-
 
   // GENERATE EMBEDDINGS
   const productsWithEmbeddings = await Promise.all(
@@ -89,8 +96,6 @@ export async function GET() {
     })
 
   );
-
-
 
   // SAVE TO DATABASE
   await Product.insertMany(productsWithEmbeddings);

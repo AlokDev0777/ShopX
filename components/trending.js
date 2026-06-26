@@ -1,12 +1,60 @@
-import Link from "next/link"
+"use client";
+
+import { Heart, Star } from "lucide-react";
+import Link from "next/link";
+import { wishlist, showWishlist } from "@/actions/backend";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 export default function TrendingProducts({ products }) {
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-24">
+  const [wishlistIds, setWishlistIds] = useState([]);
+  const { data: session } = useSession();
 
-      <div className="flex justify-between items-center mb-12">
-        <h2 className="text-4xl font-bold">
-          Trending Products
+  const createwishlist = async (productId) => {
+    if (!session?.user?.email) return;
+
+    const result = await wishlist(
+      productId,
+      session.user.email
+    );
+
+    if (result.isWishlisted) {
+      setWishlistIds((prev) => [
+        ...prev,
+        productId.toString(),
+      ]);
+    } else {
+      setWishlistIds((prev) =>
+        prev.filter(
+          (id) => id !== productId.toString()
+        )
+      );
+    }
+  };
+
+  useEffect(() => {
+    const loadWishlist = async () => {
+      if (!session?.user?.email) return;
+
+      const data = await showWishlist(
+        session.user.email
+      );
+
+      setWishlistIds(
+        data.wishlist.map((item) =>
+          item._id.toString()
+        )
+      );
+    };
+
+    loadWishlist();
+  }, [session]);
+
+  return (
+    <section className="max-w-7xl mx-auto overflow-x-hidden px-6 mt-18">
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-3xl font-inter font-bold text-slate-900">
+          Todays Best Deals For You!
         </h2>
 
         <button className="text-blue-600 font-semibold">
@@ -14,71 +62,97 @@ export default function TrendingProducts({ products }) {
         </button>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-        {products?.slice(0, 8).map((product) => (
+      <div className="flex gap-3 pb-4">
+        {products?.slice(0, 5).map((product) => (
           <Link
             href={`/product/${product._id}`}
             key={product._id}
+            className="group shrink-0 w-59"
           >
-            <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-300">
-
-              <div className="relative overflow-hidden">
-
+            <div>
+              <div
+                className="
+                  relative
+                  aspect-square
+                  overflow-hidden
+                  rounded-3xl
+                  bg-white
+                  border
+                  border-zinc-200
+                  shadow-sm
+                  transition-all
+                  duration-300
+                  group-hover:shadow-lg
+                "
+              >
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="h-72 w-full object-cover group-hover:scale-110 transition duration-500"
+                  className="
+                    w-full
+                    h-full
+                    object-contain
+                    transition-transform
+                    duration-500
+                    group-hover:scale-105
+                  "
                 />
 
-                <span className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm">
-                  -20%
-                </span>
-
-                <button className="absolute top-4 right-4 bg-white p-2 rounded-full shadow">
-                  ❤️
+                <button
+                  className="absolute top-3 right-3 h-10 w-10 rounded-full bg-slate-200 shadow-md flex items-center justify-center"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    createwishlist(product._id);
+                  }}
+                >
+                  <Heart
+                    className={
+                      wishlistIds.includes(
+                        product._id.toString()
+                      )
+                        ? "fill-black text-black"
+                        : "text-gray-500"
+                    }
+                  />
                 </button>
-
               </div>
 
-              <div className="p-5">
-
-                <p className="text-sm text-zinc-500">
-                  {product.category}
-                </p>
-
-                <h3 className="font-semibold text-lg mt-2">
+              <div className="mt-3">
+                <h3
+                  className="
+                    mt-1
+                    font-roboto
+                    text-base
+                    text-slate-900
+                    line-clamp-2
+                  "
+                >
                   {product.title}
                 </h3>
 
-                <div className="flex items-center mt-2">
-                  ⭐⭐⭐⭐⭐
+                <div className="mt-2 flex gap-0.5">
+                  <Star size={15} className="fill-blue-800" />
+                  <Star size={15} className="fill-blue-800" />
+                  <Star size={15} className="fill-blue-800" />
+                  <Star size={15} className="fill-blue-800" />
+                  <Star size={15} />
                 </div>
 
-                <div className="flex items-center gap-3 mt-4">
-
-                  <span className="text-2xl font-bold">
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xl font-inter font-extrabold text-slate-900">
                     ₹{product.price}
                   </span>
 
-                  <span className="line-through text-zinc-400">
+                  <span className="text-slate-400 line-through">
                     ₹{Math.round(product.price * 1.3)}
                   </span>
-
                 </div>
-
-                <button className="w-full mt-5 bg-black text-white py-3 rounded-xl hover:bg-zinc-800">
-                  Add To Cart
-                </button>
-
               </div>
-
             </div>
           </Link>
         ))}
-
       </div>
-
     </section>
-  )
+  );
 }
