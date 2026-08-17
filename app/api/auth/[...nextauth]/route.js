@@ -9,7 +9,8 @@ import User from "@/models/User"
 import bcrypt from "bcryptjs"
 import Credentials from "next-auth/providers/credentials";
 
-const handler = NextAuth({
+
+export const authOptions = {
 
   providers: [
 
@@ -62,11 +63,7 @@ const handler = NextAuth({
     return null
   }
 
-  console.log("AUTHORIZE USER:", {
-  id: user._id.toString(),
-  name: user.name,
-  email: user.email
-});
+
 
   return {
     id: user._id.toString(),
@@ -82,8 +79,7 @@ const handler = NextAuth({
 
      async jwt({ token, user }) {
 
-        console.log("JWT USER:", user);
-  console.log("JWT TOKEN BEFORE:", token);
+    
 
 
     if (user) {
@@ -91,19 +87,19 @@ const handler = NextAuth({
       token.retailerId = user.retailerId ?? null
     }
 
-      console.log("JWT TOKEN AFTER:", token);
+      
 
     return token
   },
 
   async session({ session, token }) {
-      console.log("SESSION TOKEN:", token);
+      
 
 
     session.user.id = token.id
     session.user.retailerId = token.retailerId ?? null
 
-      console.log("FINAL SESSION:", session);
+      
     return session
   },
 
@@ -139,6 +135,11 @@ const handler = NextAuth({
 
   }
 
-})
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }
+
+
+// Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam vitae in similique voluptate magni, ad quo excepturi nam autem ipsa sed nobis ut.

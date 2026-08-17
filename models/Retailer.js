@@ -9,8 +9,8 @@ const retailerSchema = new mongoose.Schema(
       unique: true,
     },
 
-    name:{
-           type: String,
+    name: {
+      type: String,
       required: true,
     },
 
@@ -41,9 +41,9 @@ const retailerSchema = new mongoose.Schema(
       required: true,
     },
 
-    country: {
-      type: String,
-      required: true,
+    products: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
     },
 
     state: {
@@ -66,12 +66,21 @@ const retailerSchema = new mongoose.Schema(
       required: true,
     },
 
+      products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
+  
+  totalRevenue: { type: Number, default: 0 },
+
 
     approved: {
       type: Boolean,
       default: true,
     },
-    
+
   },
   {
     timestamps: true,

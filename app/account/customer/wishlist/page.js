@@ -17,7 +17,7 @@ export default function WishlistPage() {
     const load = async () => {
       if (!session?.user?.email) return;
 
-      const products = await showWishlist(session.user.email);
+      const products = await showWishlist();
 
       const items = products.wishlist.map((item) => ({
         id: item._id.toString(),
@@ -25,7 +25,7 @@ export default function WishlistPage() {
         category: item.category,
         price: item.price,
         oldPrice: Math.round(item.price * 1.3),
-        image: item.image,
+        images: item.images,
       }));
 
       setWishlistItems(items);
@@ -34,8 +34,8 @@ export default function WishlistPage() {
     load();
   }, [session]);
 
- const handleremove = async (productId, email) => {
-  await deleteFromWishlist(productId, email);
+ const handleremove = async (productId) => {
+  await deleteFromWishlist(productId);
 
   setWishlistItems(prev =>
     prev.filter(item => item.id !== productId)
@@ -80,9 +80,8 @@ export default function WishlistPage() {
               >
                 {/* Product Image */}
                 <div className="relative h-40 w-40 shrink-0 bg-zinc-100 rounded-2xl overflow-hidden">
-                  <Image
-                    fill
-                    src={item.image}
+                  <img
+                    src={item.images[0]}
                     alt={item.title}
                     className="object-contain p-4"
                   />
@@ -115,7 +114,7 @@ export default function WishlistPage() {
 
                 {/* Remove Button */}
                 <div className="flex items-start pt-2">
-                  <button onClick={()=>{handleremove(item.id, session.user.email)}} className="p-3 bg-red-50 rounded-full hover:bg-red-100 transition-colors">
+                  <button onClick={()=>{handleremove(item.id)}} className="p-3 bg-red-50 rounded-full hover:bg-red-100 transition-colors">
                     <Trash2 size={20} className="text-red-500" />
                   </button>
                 </div>

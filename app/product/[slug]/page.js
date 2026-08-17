@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import ProductGallery from "@/components/productgallery";
 import ProductTabs from "@/components/producttab";
 import Rightside from "@/components/rightside";
+import Script from "next/script";
 
 import {
   ShoppingCart,
@@ -33,6 +34,8 @@ export default async function ProductPage({ params }) {
   const { product, seller, relatedProducts } = data;
 
   return (
+<>
+    <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     <div className="min-h-screen bg-[#F5F7FA] w-full">
       <Nav />
 
@@ -72,10 +75,9 @@ export default async function ProductPage({ params }) {
                   className="rounded-2xl sm:rounded-[28px] overflow-hidden border shadow-sm hover:shadow-xl transition-all bg-white"
                 >
                   <div className="relative h-40 sm:h-60 bg-slate-50">
-                    <Image
-                      src={item.image}
+                    <img
+                      src={item.images[0]}
                       alt={item.title}
-                      fill
                       className="object-contain p-3 sm:p-4"
                     />
                   </div>
@@ -95,5 +97,6 @@ export default async function ProductPage({ params }) {
 
       </div>
     </div>
+    </>
   );
 }

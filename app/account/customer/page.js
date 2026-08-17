@@ -156,7 +156,7 @@ export default function CustomerProfile() {
                                 </div>
                             </button>
 
-                            <button onClick={()=>{check(session?.user?.id)}} className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
+                            <button onClick={()=>{check()}} className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <Settings className="text-zinc-700" />

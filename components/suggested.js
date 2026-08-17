@@ -202,7 +202,7 @@ export default function SuggestedProducts({ products = [] }) {
                 {/* Image */}
                 <div className="w-full aspect-square rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden mb-3">
                   <img
-                    src={product.image}
+                    src={product.images[0]}
                     alt={product.title}
                     className="w-full h-full object-contain p-3 group-hover:scale-105 transition duration-500"
                   />

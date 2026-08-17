@@ -1,13 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Star, CheckCircle, PackageSearch } from "lucide-react";
+import { Star, CheckCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { addReview, getProductReviews } from "@/actions/backend";
+import { addReview, getReviews } from "@/actions/backend";
 
 const TABS = ["Description", "Additional Information", "Reviews"];
 
-// ── Star display row ──────────────────────────────────
+const dummySpecs = [
+  { spec: "Brand", detail: "ShopX Originals", info: "Verified Brand", remark: "Trusted" },
+  { spec: "Material", detail: "Premium Quality", info: "Grade A Material", remark: "Durable" },
+  { spec: "Weight", detail: "320g", info: "Lightweight design", remark: "Portable" },
+  { spec: "Dimensions", detail: "18 × 15 × 8 cm", info: "Compact build", remark: "Travel friendly" },
+  { spec: "Warranty", detail: "1 Year", info: "Manufacturer warranty", remark: "Extendable" },
+  { spec: "In The Box", detail: "1 Unit + Manual", info: "Complete package", remark: "Ready to use" },
+];
+
 function StarRow({ rating, size = 16 }) {
   return (
     <div className="flex items-center gap-0.5">
@@ -26,9 +34,10 @@ function StarRow({ rating, size = 16 }) {
   );
 }
 
-// ── Interactive star picker for review form ───────────
+// Interactive star picker for the review form
 function StarPicker({ value, onChange }) {
   const [hovered, setHovered] = useState(0);
+
   return (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -54,53 +63,40 @@ function StarPicker({ value, onChange }) {
   );
 }
 
-// ── Main component ────────────────────────────────────
 export default function ProductTabs({ product }) {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("Description");
 
-  // Data
+  // Reviews state
   const [reviews, setReviews] = useState([]);
-  const [specs, setSpecs] = useState([]);
-  const [dataLoading, setDataLoading] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
 
-  // Review form
+  // Form state
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState(null);
   const [formSuccess, setFormSuccess] = useState(null);
 
-  // Load reviews + specs once when Reviews or Additional Info tab opens
+  // Load reviews when Reviews tab is opened
   useEffect(() => {
-    if (
-      activeTab !== "Reviews" &&
-      activeTab !== "Additional Information"
-    ) return;
-    if (dataLoaded) return; // don't reload if already fetched
+    if (activeTab !== "Reviews") return;
 
     const load = async () => {
-      setDataLoading(true);
-      const result = await getProductReviews(product._id);
-      if (result.success) {
-        setReviews(result.reviews);
-        setSpecs(result.specs);
-      }
-      setDataLoaded(true);
-      setDataLoading(false);
+      setReviewsLoading(true);
+      const result = await getReviews(product._id);
+      if (result.success) setReviews(result.reviews);
+      setReviewsLoading(false);
     };
 
     load();
-  }, [activeTab, product._id, dataLoaded]);
+  }, [activeTab, product._id]);
 
-  // Rating calculations
+  // Rating summary calculations
   const avgRating =
     reviews.length > 0
-      ? (
-          reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
-        ).toFixed(1)
-      : null;
+      ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
+      : 0;
 
   const ratingCounts = [5, 4, 3, 2, 1].map((star) => ({
     star,
@@ -108,22 +104,27 @@ export default function ProductTabs({ product }) {
     percent:
       reviews.length > 0
         ? `${Math.round(
-            (reviews.filter((r) => r.rating === star).length /
-              reviews.length) *
-              100
+            (reviews.filter((r) => r.rating === star).length / reviews.length) * 100
           )}%`
         : "0%",
   }));
 
-  // Submit review
   const handleSubmitReview = async () => {
-    if (rating === 0) { setFormError("Please select a rating"); return; }
-    if (!comment.trim()) { setFormError("Please write a comment"); return; }
-    if (!session?.user?.email) { setFormError("Please login to submit a review"); return; }
+    if (rating === 0) {
+      setFormError("Please select a rating");
+      return;
+    }
+    if (!comment.trim()) {
+      setFormError("Please write a comment");
+      return;
+    }
+    if (!session?.user?.email) {
+      setFormError("Please login to submit a review");
+      return;
+    }
 
     setSubmitting(true);
     setFormError(null);
-    setFormSuccess(null);
 
     const result = await addReview(
       product._id,
@@ -137,7 +138,7 @@ export default function ProductTabs({ product }) {
       setRating(0);
       setComment("");
       // Reload reviews
-      const updated = await getProductReviews(product._id);
+      const updated = await getReviews(product._id);
       if (updated.success) setReviews(updated.reviews);
     } else {
       setFormError(result.message);
@@ -149,19 +150,15 @@ export default function ProductTabs({ product }) {
   return (
     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
 
-      {/* ── Tab Navigation ── */}
+      {/* Tab Navigation */}
       <div className="flex border-b border-slate-200 px-2 sm:px-6 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`
-              relative px-4 sm:px-6 py-4 text-sm sm:text-base font-medium
-              whitespace-nowrap transition-colors
-              ${activeTab === tab
-                ? "text-[#071633]"
-                : "text-slate-400 hover:text-slate-600"
-              }
+              relative px-4 sm:px-6 py-4 text-sm sm:text-base font-medium whitespace-nowrap transition-colors
+              ${activeTab === tab ? "text-[#071633]" : "text-slate-400 hover:text-slate-600"}
             `}
           >
             {tab}
@@ -177,126 +174,92 @@ export default function ProductTabs({ product }) {
         ))}
       </div>
 
-      {/* ── Tab Content ── */}
+      {/* Tab Content */}
       <div className="p-5 sm:p-8">
 
-        {/* DESCRIPTION */}
+        {/* ── DESCRIPTION ── */}
         {activeTab === "Description" && (
           <div className="max-w-3xl tab-content">
             <h2 className="text-lg sm:text-xl font-bold text-[#071633] mb-3">
               About this product
             </h2>
             <p className="text-slate-600 text-sm sm:text-base leading-7 sm:leading-8">
-              {product.description || "No description available."}
+              {product.description}
             </p>
           </div>
         )}
 
-        {/* ADDITIONAL INFORMATION */}
+        {/* ── ADDITIONAL INFORMATION ── */}
         {activeTab === "Additional Information" && (
-          <div className="tab-content">
-            {dataLoading ? (
-              <div className="text-center py-10 text-slate-400">
-                Loading specifications...
-              </div>
-            ) : specs.length === 0 ? (
-              <div className="text-center py-10">
-                <PackageSearch
-                  size={40}
-                  className="mx-auto text-slate-200 mb-3"
-                />
-                <p className="text-slate-400 font-medium">
-                  No specifications added yet
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm sm:text-base">
-                  <thead>
-                    <tr className="bg-[#071633] text-white">
-                      <th className="text-left px-5 py-3.5 rounded-tl-xl font-semibold w-1/3">
-                        Specification
-                      </th>
-                      <th className="text-left px-5 py-3.5 rounded-tr-xl font-semibold">
-                        Details
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {specs.map((row, index) => (
-                      <tr
-                        key={index}
-                        className={
-                          index % 2 === 0 ? "bg-white" : "bg-slate-50"
-                        }
-                      >
-                        <td className="px-5 py-3.5 font-medium text-[#071633] border-b border-slate-100">
-                          {row.key}
-                        </td>
-                        <td className="px-5 py-3.5 text-slate-600 border-b border-slate-100">
-                          {row.detail}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+          <div className="overflow-x-auto tab-content">
+            <table className="w-full text-sm sm:text-base">
+              <thead>
+                <tr className="bg-blue-600 text-white">
+                  <th className="text-left px-4 py-3 rounded-tl-xl font-semibold">Specification</th>
+                  <th className="text-left px-4 py-3 font-semibold">Details</th>
+                  <th className="text-left px-4 py-3 font-semibold hidden sm:table-cell">More Info</th>
+                  <th className="text-left px-4 py-3 rounded-tr-xl font-semibold hidden sm:table-cell">Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(product.specs?.length > 0 ? product.specs : dummySpecs).map((row, index) => (
+                  <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-slate-50"}>
+                    <td className="px-4 py-3 font-medium text-[#071633]">{row.spec}</td>
+                    <td className="px-4 py-3 text-slate-600">{row.detail}</td>
+                    <td className="px-4 py-3 text-slate-500 hidden sm:table-cell">{row.info}</td>
+                    <td className="px-4 py-3 text-slate-500 hidden sm:table-cell">{row.remark}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 
-        {/* REVIEWS */}
+        {/* ── REVIEWS ── */}
         {activeTab === "Reviews" && (
           <div className="tab-content">
-            {dataLoading ? (
+
+            {reviewsLoading ? (
               <div className="text-center py-10 text-slate-400">
                 Loading reviews...
               </div>
             ) : (
               <>
-                {/* Rating Summary */}
+                {/* Rating Summary — only show if reviews exist */}
                 {reviews.length > 0 && (
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pb-6 border-b border-slate-100 mb-6">
+                  <div className="flex items-center gap-6 pb-6 border-b border-slate-100 mb-6">
                     <div className="text-center shrink-0">
-                      <p className="text-5xl font-bold text-[#071633]">
-                        {avgRating}
-                      </p>
+                      <p className="text-5xl font-bold text-[#071633]">{avgRating}</p>
                       <StarRow rating={Math.round(avgRating)} size={18} />
                       <p className="text-slate-400 text-xs mt-1">
                         {reviews.length} Review{reviews.length > 1 ? "s" : ""}
                       </p>
                     </div>
-                    <div className="flex-1 w-full space-y-2">
-                      {ratingCounts.map(({ star, count, percent }) => (
+                    <div className="flex-1 space-y-2">
+                      {ratingCounts.map(({ star, percent }) => (
                         <div key={star} className="flex items-center gap-2">
-                          <span className="text-xs text-slate-500 w-3 shrink-0">
-                            {star}
-                          </span>
-                          <Star
-                            size={12}
-                            className="fill-yellow-400 text-yellow-400 shrink-0"
-                          />
+                          <span className="text-xs text-slate-500 w-3">{star}</span>
+                          <Star size={12} className="fill-yellow-400 text-yellow-400 shrink-0" />
                           <div className="flex-1 bg-slate-100 rounded-full h-1.5">
                             <div
-                              className="bg-yellow-400 h-1.5 rounded-full transition-all duration-500"
+                              className="bg-yellow-400 h-1.5 rounded-full transition-all"
                               style={{ width: percent }}
                             />
                           </div>
-                          <span className="text-xs text-slate-400 w-8 shrink-0">
-                            ({count})
-                          </span>
+                          <span className="text-xs text-slate-400 w-6">{percent}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Review Form */}
+                {/* Write a Review Form */}
                 {session?.user ? (
                   <div className="bg-slate-50 rounded-2xl p-5 mb-6">
                     <h3 className="font-bold text-slate-900 mb-4">
                       Write a Review
                     </h3>
+
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -352,17 +315,12 @@ export default function ProductTabs({ product }) {
                   </div>
                 )}
 
-                {/* Reviews List */}
+                {/* Individual Reviews */}
                 {reviews.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Star
-                      size={40}
-                      className="mx-auto mb-3 fill-slate-200 text-slate-200"
-                    />
-                    <p className="font-medium text-slate-500">
-                      No reviews yet
-                    </p>
-                    <p className="text-sm text-slate-400 mt-1">
+                  <div className="text-center py-8 text-slate-400">
+                    <Star size={40} className="mx-auto mb-3 fill-slate-200 text-slate-200" />
+                    <p className="font-medium">No reviews yet</p>
+                    <p className="text-sm mt-1">
                       Be the first to review this product
                     </p>
                   </div>
@@ -377,11 +335,11 @@ export default function ProductTabs({ product }) {
                           <div className="flex items-center gap-3">
                             <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
                               <span className="text-blue-600 font-semibold text-sm">
-                                {review.name?.charAt(0)?.toUpperCase()}
+                                {review.name.charAt(0)}
                               </span>
                             </div>
                             <div>
-                              <div className="flex items-center gap-2 flex-wrap">
+                              <div className="flex items-center gap-2">
                                 <p className="font-semibold text-sm text-[#071633]">
                                   {review.name}
                                 </p>
@@ -396,14 +354,11 @@ export default function ProductTabs({ product }) {
                             </div>
                           </div>
                           <span className="text-slate-400 text-xs shrink-0">
-                            {new Date(review.createdAt).toLocaleDateString(
-                              "en-IN",
-                              {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )}
+                            {new Date(review.createdAt).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
                           </span>
                         </div>
                         <p className="text-slate-600 text-sm leading-6 mt-2 ml-12">

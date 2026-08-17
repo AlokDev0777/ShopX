@@ -57,6 +57,7 @@ import Nav from "@/components/Nav";
 
 export default function CartPage() {
    const { data: session } = useSession();
+   const router = useRouter()
     const [cartItems, setCartItems] = useState([]);
   
   // const subtotal = cartItems.reduce(
@@ -76,13 +77,13 @@ export default function CartPage() {
   setCartItems(data.cart || []) // always fallback to empty array
 }
   
-    load(session?.user?.email)
+  load()
 
   }, [session])
   
-  const handleRemove = async (productId, email) => {
+  const handleRemove = async (productId) => {
     
-      await deleteFromCart(productId, email);
+      await deleteFromCart(productId);
     
       setCartItems(prev =>
         prev.filter(item => item._id !== productId)
@@ -141,7 +142,7 @@ export default function CartPage() {
                   "
                   >
                     <Image
-                      src={item.image}
+                      src={item.images[0]}
                       alt={item.title}
                       fill
                       className="object-contain p-4"
@@ -196,7 +197,7 @@ export default function CartPage() {
                       </div>
 
                       <button
-                        onClick={()=>{handleRemove(item._id, session.user.email)}}
+                        onClick={()=>{handleRemove(item._id)}}
                         className="
                         h-11
                         w-11
@@ -404,7 +405,7 @@ export default function CartPage() {
                 gap-2
                 transition
               "
-              >
+               onClick={() => router.push("/checkout?type=cart")}>
                 Checkout
                 <ArrowRight size={18} />
               </button>

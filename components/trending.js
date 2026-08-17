@@ -5,6 +5,7 @@ import Link from "next/link";
 import { wishlist, showWishlist } from "@/actions/backend";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function TrendingProducts({ products }) {
   const [wishlistIds, setWishlistIds] = useState([]);
@@ -15,7 +16,6 @@ export default function TrendingProducts({ products }) {
 
     const result = await wishlist(
       productId,
-      session.user.email
     );
 
     if (result.isWishlisted) {
@@ -37,7 +37,6 @@ export default function TrendingProducts({ products }) {
       if (!session?.user?.email) return;
 
       const data = await showWishlist(
-        session.user.email
       );
 
       setWishlistIds(
@@ -86,7 +85,7 @@ export default function TrendingProducts({ products }) {
                 "
               >
                 <img
-                  src={product.image}
+                  src={product.images[0]}
                   alt={product.title}
                   className="
                     w-full

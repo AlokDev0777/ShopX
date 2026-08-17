@@ -3,12 +3,15 @@ import React from 'react'
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useRef } from 'react';
 import { addToCart } from '@/actions/backend';
+import { useRouter } from 'next/navigation';
 
 import {
   ShoppingCart,
   Store,
   Truck,
+  CheckCircle,
   ShieldCheck,
   ArrowRight,
   Star,
@@ -16,17 +19,34 @@ import {
   RotateCcw,
 } from "lucide-react";
 
+
+
 const Rightside = ({ product }) => {
-
   const { data: session } = useSession();
-
-  const cart = async (productId, email) => {
+  const [IsVisible, setIsVisible] = useState(false)
+  const timer = useRef(null)
+  const router = useRouter()
+  const cart = async (productId) => {
     if (!session?.user?.email) return;
-    const a = await addToCart(productId, email)
+    const a = await addToCart(productId)
+    
+    if(a.success){
+      setIsVisible(true)  
+      if (timer.current) {
+      clearTimeout(timer.current);
+    }
 
-    console.log(a)
-    console.log("done")
-  }
+    // 3. Set a timer to hide the component after 3 seconds (3000ms)
+    timer.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 3000);
+  };
+
+
+    }
+
+    
+  
 
   return (
     <div className="bg-white lg:bg-transparent rounded-3xl lg:rounded-none p-5 sm:p-6 lg:p-0">
@@ -48,7 +68,7 @@ const Rightside = ({ product }) => {
             <Star
               key={star}
               size={14}
-              className="fill-yellow-400 text-yellow-400 sm:w-[18px] sm:h-[18px]"
+              className="fill-yellow-400 text-yellow-400 sm:w-4.5 sm:h-4.5"
             />
           ))}
         </div>
@@ -138,16 +158,29 @@ const Rightside = ({ product }) => {
         </div>
       </div>
 
+      {IsVisible && <div className="fixed top-20 inset-x-0 mx-auto w-fit z-50 flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/95 px-4 py-3 text-sm font-medium text-white shadow-2xl backdrop-blur-sm transition-all animate-in fade-in slide-in-from-top-4 duration-300">
+  <CheckCircle size={18} className="text-green-400 fill-green-500/10" />
+  <span>Added to your cart</span>
+</div> }
+       
+     
+
       {/* Buttons */}
       <div className="mt-6 space-y-3">
         <button onClick={() => {
           if (!session?.user?.email) return;
-          cart(product._id, session.user.email)
+          cart(product._id)
         }} className="w-full bg-[#071633] hover:bg-[#0b224d] text-white py-3.5 sm:py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all text-sm sm:text-base">
           <ShoppingCart size={18} />
           Add To Cart
         </button>
-        <button className="w-full bg-[#2563FF] hover:bg-[#1d4ed8] text-white py-3.5 sm:py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all text-sm sm:text-base">
+        <button
+          onClick={() => {
+            if (!session?.user?.email) return;
+            router.push(`/checkout?type=buynow&productId=${product._id}`);
+          }}
+          className="w-full bg-[#2563FF] hover:bg-[#1d4ed8] text-white py-3.5 sm:py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all text-sm sm:text-base"
+        >
           Buy Now
           <ArrowRight size={18} />
         </button>

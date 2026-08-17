@@ -15,7 +15,7 @@ export default function ProductGallery({ product }) {
     if (!session?.user?.email) return;
 
     const fetchWishlistStatus = async () => {
-      const result = await checkWishlist(product._id, session.user.email);
+      const result = await checkWishlist(product._id);
       setIswishlisted(result.isWishlisted);
     };
 
@@ -42,13 +42,10 @@ export default function ProductGallery({ product }) {
       console.log("Setting TRUE");
     }
   };
-  const images = [
-    product.image,
-    product.image,
-    product.image,
-    product.image,
-  ];
-
+const images =
+    product.images?.length
+        ? product.images
+        : ["/placeholder.png"];
   const [selectedIndex, setSelectedIndex] = useState(0);
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
@@ -79,6 +76,11 @@ export default function ProductGallery({ product }) {
 
   };
 
+
+
+  console.log(product.images);
+console.log(images);
+console.log(images[selectedIndex]);
  
 
   return (
@@ -91,15 +93,13 @@ export default function ProductGallery({ product }) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <Image
+        <img
           src={images[selectedIndex]}
           alt={product.title}
-          fill
-          priority
           className="object-contain p-4 sm:p-6 transition-all duration-300"
         />
 
-        <button onClick={() => { createwishlist(product._id, session?.user?.email) }} className="absolute top-4 right-4 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white border shadow-sm flex items-center justify-center hover:scale-105 transition-all">
+        <button onClick={() => { createwishlist(product._id) }} className="absolute top-4 right-4 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white border shadow-sm flex items-center justify-center hover:scale-105 transition-all">
           <Heart
             className={
               Iswishlisted
@@ -140,10 +140,9 @@ export default function ProductGallery({ product }) {
               ${selectedIndex === index ? "border-blue-600" : "border-slate-200"}
             `}
           >
-            <Image
+            <img
               src={img}
-              alt={`thumbnail-${index}`}
-              fill
+              alt={`thumbnail-${index}`} 
               className="object-contain p-1.5"
             />
           </button>
@@ -153,3 +152,4 @@ export default function ProductGallery({ product }) {
     </div>
   );
 }
+

@@ -10,74 +10,149 @@ export async function GET() {
 
   await Product.deleteMany();
 
-  const products = [
+const products = [
+  {
+    title: "Apple iPhone 15",
+    description: "Latest iPhone with Dynamic Island and A16 chip.",
+    price: 79999,
+    discountPrice: 74999,
+    brand: "Apple",
+    stock: 25,
+    category: "Smartphones",
+    images: [
+      "https://placehold.co/600x600?text=iPhone+15",
+      "https://placehold.co/600x600?text=iPhone+15+Front",
+      "https://placehold.co/600x600?text=iPhone+15+Back"
+    ],
+    highlights: [
+      "A16 Bionic Chip",
+      "48MP Camera",
+      "Dynamic Island",
+      "USB-C"
+    ],
+    specs: [
+      { key: "Display", detail: "6.1 inch OLED" },
+      { key: "Storage", detail: "128GB" },
+      { key: "Battery", detail: "3349mAh" },
+      { key: "OS", detail: "iOS 18" }
+    ],
+    reviews: [],
+    retailer: null
+  },
 
-    {
-      title: "minamilist",
-      description: "vitamin c serum for glowing skin",
-      price: 59,
-      image: "/minimalist.webp",
-      category: "perfume"
-    },
+  {
+    title: "Samsung Galaxy S25",
+    description: "Premium Android flagship smartphone.",
+    price: 84999,
+    discountPrice: 79999,
+    brand: "Samsung",
+    stock: 18,
+    category: "Smartphones",
+    images: [
+      "https://placehold.co/600x600?text=Galaxy+S25",
+      "https://placehold.co/600x600?text=Galaxy+Display"
+    ],
+    highlights: [
+      "120Hz AMOLED",
+      "Snapdragon Processor",
+      "50MP Camera",
+      "Fast Charging"
+    ],
+    specs: [
+      { key: "Display", detail: "6.7 inch AMOLED" },
+      { key: "RAM", detail: "12GB" },
+      { key: "Storage", detail: "256GB" },
+      { key: "Battery", detail: "4900mAh" }
+    ],
+    reviews: [],
+    retailer: null
+  },
 
-    {
-      title: "fashwash",
-      description: "Gentle face wash for all skin types.",
-      price: 29,
-      image: "/fashwash.jpg",
-      category: "skincare"
-    },
+  {
+    title: "MacBook Air M3",
+    description: "Ultra-thin laptop powered by Apple M3.",
+    price: 114999,
+    discountPrice: 109999,
+    brand: "Apple",
+    stock: 12,
+    category: "Laptops",
+    images: [
+      "https://placehold.co/600x600?text=MacBook+Air",
+      "https://placehold.co/600x600?text=Keyboard",
+      "https://placehold.co/600x600?text=Display"
+    ],
+    highlights: [
+      "Apple M3 Chip",
+      "18 Hour Battery",
+      "Retina Display",
+      "MagSafe"
+    ],
+    specs: [
+      { key: "Processor", detail: "Apple M3" },
+      { key: "RAM", detail: "16GB" },
+      { key: "Storage", detail: "512GB SSD" },
+      { key: "Weight", detail: "1.24kg" }
+    ],
+    reviews: [],
+    retailer: null
+  },
 
-    {
-      title: "Macbook Pro",
-      description: "Powerful laptop for professionals.",
-      price: 1299,
-      image: "/macbook.png",
-      category: "Electronics"
-    },
+  {
+    title: "Sony WH-1000XM5",
+    description: "Wireless noise cancelling headphones.",
+    price: 29999,
+    discountPrice: 26999,
+    brand: "Sony",
+    stock: 40,
+    category: "Headphones",
+    images: [
+      "https://placehold.co/600x600?text=Sony+XM5",
+      "https://placehold.co/600x600?text=Side+View"
+    ],
+    highlights: [
+      "30 Hour Battery",
+      "Noise Cancellation",
+      "Bluetooth 5.3",
+      "Fast Charging"
+    ],
+    specs: [
+      { key: "Driver", detail: "30mm" },
+      { key: "Battery", detail: "30 Hours" },
+      { key: "Weight", detail: "250g" },
+      { key: "Connectivity", detail: "Bluetooth 5.3" }
+    ],
+    reviews: [],
+    retailer: null
+  },
 
-    {
-      title: "Laptop",
-      description: "Powerful gaming laptop for gamers",
-      price: 49999,
-      image: "/laptop.png",
-      category: "Electronics",
-    },
-
-    {
-      title: "Organizer bag",
-      description: "Bag for organising your electronics items",
-      price: 999,
-      image: "/organizer bag.png",
-      category: "Electronics",
-    },
-    {
-      title: "Monitor",
-      description: "Best monitor for gaming with a refresh rate of 144hz",
-      price: 9999,
-      image: "/monitor.png",
-      category: "Electronics",
-    },
-
-
-    {
-      title: "jeans",
-      description: "Comfortable jeans for everyday wear.",
-      price: 499,
-      image: "/jeans2.png",
-      category: "Clothing"
-    },
-
-     {
-      title: "t-shirt",
-      description: "Comfortable t-shirt for everyday wear.",
-      price: 1999,
-      image: "/t-shirt.png",
-      category: "Clothing"
-    },
-
-
-  ];
+  {
+    title: "Logitech MX Master 3S",
+    description: "Professional productivity mouse.",
+    price: 9999,
+    discountPrice: 8999,
+    brand: "Logitech",
+    stock: 55,
+    category: "Accessories",
+    images: [
+      "https://placehold.co/600x600?text=MX+Master+3S",
+      "https://placehold.co/600x600?text=Top+View"
+    ],
+    highlights: [
+      "8000 DPI",
+      "Silent Clicks",
+      "USB-C Charging",
+      "Multi-device"
+    ],
+    specs: [
+      { key: "Sensor", detail: "8000 DPI" },
+      { key: "Battery", detail: "70 Days" },
+      { key: "Weight", detail: "141g" },
+      { key: "Connectivity", detail: "Bluetooth" }
+    ],
+    reviews: [],
+    retailer: null
+  }
+];
 
   // GENERATE EMBEDDINGS
   const productsWithEmbeddings = await Promise.all(

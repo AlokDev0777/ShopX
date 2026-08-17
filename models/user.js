@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
   ],
 
-      retailer: {
+      retailerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Retailer",
         default: null
@@ -37,9 +37,12 @@ const userSchema = new mongoose.Schema({
     },
   ],
 
-  orders:{
-     type: Object
-  },
+  orders:[
+     {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
 
   address:{
      type: String

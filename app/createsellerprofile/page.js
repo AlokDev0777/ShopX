@@ -12,19 +12,19 @@ export default function CreateRetailerPage() {
   const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
-    storeName: "",
-    description: "",
-    phone: "",
-    email: "",
-    fullName: "",
-    address1: "",
+    storeName: "hello",
+    description: "ki bhelo",
+    phone: "777",
+    email: "@.com",
+    fullName: "AK",
+    address1: "Kopche me",
     address2: "",
-    city: "",
-    state: "",
-    pincode: "",
-    accountHolder: "",
-    accountNumber: "",
-    ifsc: "",
+    city: "hello",
+    state: "Bihar",
+    pincode: "24077",
+    accountHolder: "Babu",
+    accountNumber: "420777",
+    ifsc: "420777",
   });
 
   const handleChange = (e) => {
@@ -80,15 +80,14 @@ export default function CreateRetailerPage() {
 
   const steps = ["Store", "Address", "Bank", "Review"];
 
-  const create = (formData, userId) => {
+  const create = (formData) => {
     const err = validateStep();
     if (err) {
       setError(err);
       return;
     }
-    console.log(formData);
-    console.log(userId);
-    const id = createRetailer(formData, userId);
+
+    const id = createRetailer(formData);
   };
 
   return (
@@ -342,7 +341,7 @@ export default function CreateRetailerPage() {
               </button>
             ) : (
               <button
-                onClick={() => create(formData, session?.user?.id)}
+                onClick={() => create(formData)}
                 className="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
               >
                 Create Seller Account
