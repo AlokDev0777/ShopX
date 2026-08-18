@@ -45,7 +45,7 @@ export default function SearchPage() {
 
       setProducts(data.products);
     } catch (error) {
-      console.log(error);
+      
     } finally {
       setLoading(false);
     }

@@ -23,8 +23,7 @@ export default function ProductGallery({ product }) {
   }, [session, product._id]);
 
   const createwishlist = async (productId, email) => {
-    console.log("Product:", product);
-    console.log("Session:", session);
+   
     if (!session?.user?.email) return;
 
     const result = await wishlist(
@@ -32,14 +31,14 @@ export default function ProductGallery({ product }) {
       email
     );
 
-    console.log("Server returned:", result);
+    
 
     if (result.isWishlisted == false) {
       setIswishlisted(false);
-      console.log("Setting FALSE");
+      
     } else {
       setIswishlisted(true);
-      console.log("Setting TRUE");
+      
     }
   };
 const images =
@@ -78,9 +77,7 @@ const images =
 
 
 
-  console.log(product.images);
-console.log(images);
-console.log(images[selectedIndex]);
+
  
 
   return (

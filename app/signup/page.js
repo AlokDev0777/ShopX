@@ -9,7 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaFacebook } from "react-icons/fa";
 
 export default function SignupPage() {
-  console.log("Rendering SignupPage");
+  
 
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,7 +51,7 @@ export default function SignupPage() {
       return;
     }
 
-    console.log("Create User Result:", result);
+
 
     if (result.status === true) {
       setEmail("");

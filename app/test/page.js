@@ -6,7 +6,7 @@ export default async function Test() {
 
   const session = await getServerSession();
 
-  console.log(session);
+  
 
   return (
     <pre>

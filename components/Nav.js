@@ -22,8 +22,7 @@ const Nav = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-console.log("STATUS:", status);
-console.log("SESSION:", session);
+
 
 if (status === "loading") {
   return <div>Loading...</div>;
