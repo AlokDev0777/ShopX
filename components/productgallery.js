@@ -85,7 +85,7 @@ const images =
 
       {/* Main Image */}
       <div
-        className="relative h-[280px] sm:h-[350px] lg:h-[450px]"
+        className="relative h-70 sm:h-87.5 lg:h-112.5"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
