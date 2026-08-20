@@ -29,19 +29,26 @@ export default function Home() {
   const [products, setProducts] = useState([]);
 
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/api/products");
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products");
 
-      }
-    };
+      console.log("STATUS:", response.status);
 
-    fetchProducts();
-  }, []);
+      const data = await response.json();
+
+      console.log("API DATA:", data);
+      console.log("IS ARRAY:", Array.isArray(data));
+
+      setProducts(data);
+    } catch (error) {
+      console.error("FETCH ERROR:", error);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   return (
    <main className="min-h-screen bg-slate-100">

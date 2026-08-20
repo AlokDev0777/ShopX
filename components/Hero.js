@@ -21,7 +21,7 @@ const Hero = () => {
           <div className="relative rounded-2xl overflow-hidden shadow-lg hover:scale-[1.01] transition-transform duration-300 cursor-pointer h-62.5 sm:h-75 lg:flex-3">
 
             <img
-              src="/electronics.png"   // replace with your image
+              src="/fashionnew.png"   // replace with your image
               alt="Electronics"
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -36,7 +36,7 @@ const Hero = () => {
             {/* Fashion */}
             <div className="relative rounded-2xl overflow-hidden shadow-lg hover:scale-[1.01] transition-transform duration-300 cursor-pointer h-45 sm:h-55 lg:h-full">
               <img
-                src="/fashion.png"
+                src="/electronics.png"
                 alt="Fashion"
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -45,7 +45,7 @@ const Hero = () => {
             {/* Grocery */}
             <div className="relative rounded-2xl overflow-hidden shadow-lg hover:scale-[1.01] transition-transform duration-300 cursor-pointer h-45 sm:h-55 lg:h-full">
               <img
-                src="/grocery.png"
+                src="/groce.png"
                 alt="Grocery"
                 className="absolute inset-0 w-full h-full object-cover"
               />
