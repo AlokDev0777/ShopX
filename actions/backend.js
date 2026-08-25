@@ -531,3 +531,48 @@ export const getUserOrders = async (email) => {
     return { success: false, orders: [] };
   }
 };
+
+export async function getProductsByCategory(category) {
+  await connect();
+  const Products = await Product.find({})
+  return Products?.filter(
+    (p) => p.category.toLowerCase() === category.toLowerCase()
+  );
+}
+
+export async function getAllCategories() {
+  await connect();
+
+  // .distinct() returns only the unique values of the given field
+  const categories = await Product.distinct("category");
+
+  return categories;
+}
+
+export async function checkDb(){
+   await connect();
+}
+
+export async function getitemsbycategory(category) {
+  try {
+    await connect();
+
+    const products = await Product.find({
+      category: {
+        $regex: `^${category}$`,
+        $options: "i",
+      },
+    }).lean();
+
+    return {
+      success: true,
+      products: JSON.parse(JSON.stringify(products)),
+    };
+  } catch (error) {
+    console.error("getitemsbycategory error:", error);
+    return {
+      success: false,
+      products: [],
+    };
+  }
+}

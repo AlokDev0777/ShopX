@@ -11,6 +11,7 @@ import TrendingProducts from "@/components/trending";
 import Footer from "@/components/footer";
 import Electronics from "@/components/Electronics";
 import Fashion from "@/components/Fashion";
+import { checkDb } from "@/actions/backend";
 
 import Nav from "@/components/Nav";
 import { useEffect, useState } from "react";
@@ -39,6 +40,7 @@ useEffect(() => {
       const data = await response.json();
 
       console.log("API DATA:", data);
+      console.log("DATA TYPE:", typeof data);
       console.log("IS ARRAY:", Array.isArray(data));
 
       setProducts(data);
@@ -50,6 +52,7 @@ useEffect(() => {
   fetchProducts();
 }, []);
 
+
   return (
    <main className="min-h-screen bg-slate-100">
 
@@ -58,6 +61,10 @@ useEffect(() => {
 
   {/* HERO */}
   <Hero/>
+
+  <button className="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600" onClick={checkDb}>
+    Check DB
+  </button>
 
   <SuggestedProducts products={products}/>
 

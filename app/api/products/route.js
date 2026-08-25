@@ -11,7 +11,7 @@ export const GET = async (request) => {
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.log("Error fetching products The error is :", error);
     return new Response(JSON.stringify({ error: "Failed to fetch products" }), {
       status: 500,
       headers: { "Content-Type": "application/json" }

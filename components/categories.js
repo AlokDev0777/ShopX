@@ -23,9 +23,9 @@ const categories = [
     slug: "fashion",
   },
   {
-    name: "Mobiles",
+    name: "Smartphones",
     icon: Smartphone,
-    slug: "mobiles",
+    slug: "smartphones",
   },
   {
     name: "Electronics",
