@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-export default function TrendingProducts({ products }) {
+export default function TodayBestProducts({ products }) {
   const [wishlistIds, setWishlistIds] = useState([]);
   const { data: session } = useSession();
 
@@ -33,6 +33,8 @@ export default function TrendingProducts({ products }) {
   };
 
   useEffect(() => {
+   
+
     const loadWishlist = async () => {
       if (!session?.user?.email) return;
 

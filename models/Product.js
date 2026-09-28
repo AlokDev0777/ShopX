@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema({
   highlights: [{ type: String }],
   specs: [specSchema],
   reviews: [reviewSchema],
+    embedding: {
+    type: [Number],
+    default: [],
+  },
   retailer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Retailer",

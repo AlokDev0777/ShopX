@@ -41,11 +41,25 @@ useEffect(() => {
 
       console.log("API DATA:", data);
       console.log("DATA TYPE:", typeof data);
-      console.log("IS ARRAY:", Array.isArray(data));
+      console.log("IS PRODUCTS ARRAY:", Array.isArray(data.products));
 
-      setProducts(data);
+      if (!response.ok) {
+        console.error("API ERROR:", data.error);
+        setProducts([]);
+        return;
+      }
+
+      if (!Array.isArray(data.products)) {
+        console.error("Expected products to be an array:", data);
+        setProducts([]);
+        return;
+      }
+
+      setProducts(data.products);
+
     } catch (error) {
       console.error("FETCH ERROR:", error);
+      setProducts([]);
     }
   };
 
@@ -62,9 +76,7 @@ useEffect(() => {
   {/* HERO */}
   <Hero/>
 
-  <button className="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600" onClick={checkDb}>
-    Check DB
-  </button>
+
 
   <SuggestedProducts products={products}/>
 

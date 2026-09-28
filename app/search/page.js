@@ -14,6 +14,7 @@ import {
   Truck,
   RotateCcw,
 } from "lucide-react";
+import Nav from "@/components/Nav";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -53,6 +54,8 @@ export default function SearchPage() {
 
   return (
     <main className="min-h-screen bg-[#f6f6f7]">
+
+      <Nav />
       {/* ================= HERO SEARCH SECTION ================= */}
 
       <section className="relative overflow-hidden border-b border-gray-200 bg-white">
