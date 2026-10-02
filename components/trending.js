@@ -33,7 +33,6 @@ export default function TodayBestProducts({ products }) {
   };
 
   useEffect(() => {
-   
 
     const loadWishlist = async () => {
       if (!session?.user?.email) return;

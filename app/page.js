@@ -12,6 +12,7 @@ import Footer from "@/components/footer";
 import Electronics from "@/components/Electronics";
 import Fashion from "@/components/Fashion";
 import { checkDb } from "@/actions/backend";
+import HomeSkeleton from "@/components/homeskeleton";
 
 import Nav from "@/components/Nav";
 import { useEffect, useState } from "react";
@@ -28,7 +29,7 @@ import {
 
 export default function Home() {
   const [products, setProducts] = useState([]);
-
+  const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   const fetchProducts = async () => {
@@ -60,43 +61,51 @@ useEffect(() => {
     } catch (error) {
       console.error("FETCH ERROR:", error);
       setProducts([]);
+
+    } finally {
+      setLoading(false);
     }
   };
 
   fetchProducts();
 }, []);
 
+return (
+  <main className="min-h-screen bg-slate-100">
 
-  return (
-   <main className="min-h-screen bg-slate-100">
+    {loading ? (
+      <div className="p-4">
+        <HomeSkeleton />
+      </div>
+    ) : (
+      <>
+        <Nav />
 
-  <Nav />
-  <CategoryStrip />
+        <CategoryStrip />
 
-  {/* HERO */}
-  <Hero/>
+        {/* HERO */}
+        <Hero />
 
+        <SuggestedProducts products={products} />
 
+        {/* CATEGORIES */}
 
-  <SuggestedProducts products={products}/>
+        {/* TRENDING PRODUCTS */}
+        <TrendingProducts products={products} />
 
-  {/* CATEGORIES */}
+        <Electronics products={products} />
 
-  {/* TRENDING PRODUCTS */}
-  <TrendingProducts products={products} />
+        <Fashion />
 
-   <Electronics products={products}/>
+        {/* PROMO BANNER */}
 
-  <Fashion/>
+        {/* TRUST */}
+        <TrustSection />
 
-  {/* PROMO BANNER */}
+        <Footer />
+      </>
+    )}
 
-
-  {/* TRUST */}
-  <TrustSection />
-
-  <Footer />
-
-</main>
-  );
+  </main>
+);
 }

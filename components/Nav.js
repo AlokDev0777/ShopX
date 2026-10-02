@@ -51,17 +51,22 @@ if (status === "loading") {
         {/* Search */}
         <div className="hidden md:flex items-center bg-zinc-100 rounded-full w-full max-w-md overflow-hidden pl-4">
           <Search size={18} className="text-gray-500 shrink-0" />
+          
           <input
             type="text"
             placeholder="Search products..."
             className="bg-white ml-2 flex-1 text-[#0F172A] placeholder:text-[#94A3B8] py-2 outline-none"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+  if (e.key === "Enter") {
+    handleSearch();
+  }
+}}
           />
           <button 
             className="bg-[#2563EB] text-white px-5 py-2 hover:bg-slate-700 transition shrink-0" 
-            onClick={handleSearch}
-          >
+            onClick={handleSearch}>
             <Search size={25} className="text-white" />
           </button>
         </div>
