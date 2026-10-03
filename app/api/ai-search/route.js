@@ -44,13 +44,18 @@ export async function POST(req) {
 
 
   // SORT BY BEST MATCH
-  rankedProducts.sort((a, b) => b.score - a.score);
+rankedProducts.sort((a, b) => b.score - a.score);
+
+const MIN_SIMILARITY = 0.4;
+
+const relevantProducts = rankedProducts.filter(
+  (product) => product.score >= MIN_SIMILARITY
+);
 
 
 
-  // RETURN TOP PRODUCTS
-  return Response.json({
-    products: rankedProducts
-  });
+return Response.json({
+  products: relevantProducts
+});
 
 }
