@@ -21,7 +21,7 @@ import {
 const Nav = () => {
   const [query, setQuery] = useState("");
   const { data: session, status } = useSession();
-  console.log("SESSION DATA:", session);
+ 
   const router = useRouter();
 
 

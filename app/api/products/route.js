@@ -16,7 +16,7 @@ export const GET = async (request) => {
     });
 
   } catch (error) {
-    console.log("Error fetching products:", error);
+  
 
     return new Response(
       JSON.stringify({

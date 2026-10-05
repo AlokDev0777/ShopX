@@ -36,13 +36,11 @@ useEffect(() => {
     try {
       const response = await fetch("/api/products");
 
-      console.log("STATUS:", response.status);
+
 
       const data = await response.json();
 
-      console.log("API DATA:", data);
-      console.log("DATA TYPE:", typeof data);
-      console.log("IS PRODUCTS ARRAY:", Array.isArray(data.products));
+
 
       if (!response.ok) {
         console.error("API ERROR:", data.error);

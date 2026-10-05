@@ -81,8 +81,7 @@ export default function SearchPage() {
           ? data.products
           : [];
 
-        console.log("SEARCH RESULTS:", searchResults);
-
+   
         // Original products
         setProducts(searchResults);
 

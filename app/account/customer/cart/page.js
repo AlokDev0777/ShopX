@@ -48,7 +48,7 @@ export default function CartPage() {
 
   showCart(session.user.email)
     .then((data) => {
-      console.log("CART DATA:", data);
+    
       setCartItems(data?.cart || []);
     })
     .catch((error) => {

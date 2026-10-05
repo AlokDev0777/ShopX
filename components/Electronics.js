@@ -42,7 +42,7 @@ const Electronics = () => {
 
   const handleSearch = (query) => {
     // Implement your search logic here, e.g., redirect to a search results page
-    console.log("Searching for:", query);
+
     router.push(`/search?q=${query}`);
 
   }

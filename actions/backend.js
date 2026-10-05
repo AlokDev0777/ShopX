@@ -178,17 +178,15 @@ export const createRetailer = async (data) => {
 
 
     
-console.log("User before update:", user);
 
-console.log("New retailer id:", newRetailer._id);
 
 user.retailerId = newRetailer._id;
 
-console.log("User after assigning:", user);
+
 
 await user.save();
 
-console.log("After save:", await User.findById(user._id));
+
 
     return {
       success: true,
@@ -342,10 +340,7 @@ export const verifyAndCreateOrder = async ({
     await connect();
     const user = await User.findOne({ email: userEmail });
 
-    console.log("user found:", user); // ← add this
-    console.log("items received:", items); // ← add this
-    console.log("totalAmount:", totalAmount); // ← add this
-    console.log("deliveryAddress:", deliveryAddress); // ← add this
+  
 
     const formattedItems = items.map((item) => ({
   product: new mongoose.Types.ObjectId(item.product),
@@ -368,7 +363,6 @@ export const verifyAndCreateOrder = async ({
       deliveryAddress,
     });
 
-    console.log("order created:", order); // ← add this
 
     return { success: true, orderId: order._id.toString() };
 
