@@ -131,10 +131,10 @@ const Filters = ({ products = [], onFilterChange }) => {
 
   const clearFilters = () => {
     setSelectedBrands([]);
-    setSelectedCategory("all");
+   
     setSelectedPrice("all");
     setRating(0);
-    setInStockOnly(false);
+  
   };
 
   // =========================

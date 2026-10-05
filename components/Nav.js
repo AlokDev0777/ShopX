@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession, signIn, signOut } from "next-auth/react";
+import Navskeleton from './Navskeleton';
 
 import {
   ShoppingCart,
@@ -26,7 +27,7 @@ const Nav = () => {
 
 
 if (status === "loading") {
-  return <div>Loading...</div>;
+  return <Navskeleton />;
 }
 
 
@@ -123,10 +124,6 @@ if (status === "loading") {
                     My Wishlist
                   </Link>
 
-                  <Link href="/address" className="flex items-center px-4 py-2.5 hover:bg-slate-50 hover:text-[#2563EB] transition-colors group/item">
-                    <MapPin size={16} className="mr-3 text-slate-400 group-hover/item:text-[#2563EB]" />
-                    Addresses
-                  </Link>
 
                   <Link href="/settings" className="flex items-center px-4 py-2.5 hover:bg-slate-50 hover:text-[#2563EB] transition-colors group/item">
                     <Settings size={16} className="mr-3 text-slate-400 group-hover/item:text-[#2563EB]" />

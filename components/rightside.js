@@ -24,11 +24,12 @@ import {
 const Rightside = ({ product }) => {
   const { data: session } = useSession();
   const [IsVisible, setIsVisible] = useState(false)
+  const [qty, setqty] = useState(1)
   const timer = useRef(null)
   const router = useRouter()
-  const cart = async (productId) => {
+  const cart = async (productId, quantity) => {
     if (!session?.user?.email) return;
-    const a = await addToCart(productId)
+    const a = await addToCart(productId , quantity);
     
     if(a.success){
       setIsVisible(true)  
@@ -148,11 +149,17 @@ const Rightside = ({ product }) => {
           Quantity
         </h3>
         <div className="flex items-center gap-3">
-          <button className="h-10 w-10 text-slate-700 sm:h-12 sm:w-12 rounded-xl bg-slate-100 border-gray-300 border shadow-sm text-lg font-medium">
+          <button 
+            className="h-10 w-10 text-slate-700 sm:h-12 sm:w-12 rounded-xl bg-slate-100 border-gray-300 border shadow-sm text-lg font-medium"
+            onClick={() => setqty(Math.max(1, qty - 1))}
+          >
             -
           </button>
-          <span className="font-bold text-slate-700 text-base sm:text-lg">1</span>
-          <button className="h-10 w-10 text-slate-700 sm:h-12 sm:w-12 rounded-xl bg-slate-100 border-gray-300 border shadow-sm text-lg font-medium">
+          <span className="font-bold text-slate-700 text-base sm:text-lg">{qty}</span>
+          <button 
+            className="h-10 w-10 text-slate-700 sm:h-12 sm:w-12 rounded-xl bg-slate-100 border-gray-300 border shadow-sm text-lg font-medium"
+            onClick={() => setqty(qty + 1)}
+          >
             +
           </button>
         </div>
@@ -169,7 +176,7 @@ const Rightside = ({ product }) => {
       <div className="mt-6 space-y-3">
         <button onClick={() => {
           if (!session?.user?.email) return;
-          cart(product._id)
+          cart(product._id, qty)
         }} className="w-full bg-[#071633] hover:bg-[#0b224d] text-white py-3.5 sm:py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all text-sm sm:text-base">
           <ShoppingCart size={18} />
           Add To Cart
@@ -177,7 +184,7 @@ const Rightside = ({ product }) => {
         <button
           onClick={() => {
             if (!session?.user?.email) return;
-            router.push(`/checkout?type=buynow&productId=${product._id}`);
+            router.push(`/checkout?type=buynow&productId=${product._id}&quantity=${qty}`);
           }}
           className="w-full bg-[#2563FF] hover:bg-[#1d4ed8] text-white py-3.5 sm:py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all text-sm sm:text-base"
         >

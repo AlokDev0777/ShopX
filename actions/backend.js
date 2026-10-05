@@ -44,7 +44,7 @@ export const wishlist = async (productId) => {
   }
 };
 
-export const addToCart = async (productId) => {
+export const addToCart = async (productId, quantity) => {
   try {
     await connect();
     const email = await getAuthEmail();
@@ -52,7 +52,7 @@ export const addToCart = async (productId) => {
 
     if (!user) return { success: false, message: "User not found" };
 
-    user.cart.addToSet(productId);
+    user.cart.addToSet({ product: productId, quantity });
     await user.save();
     return { success: true, isAddedToCart: true, message: "Added to cart" };
   } catch (error) {
@@ -65,7 +65,7 @@ export const showCart = async () => {
   try {
     await connect();
     const email = await getAuthEmail();
-    const user = await User.findOne({ email }).populate("cart").lean();
+    const user = await User.findOne({ email }).populate("cart.product").lean();
 
     if (!user) return { success: false, cart: [] };
 

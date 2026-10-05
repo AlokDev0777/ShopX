@@ -12,9 +12,12 @@ import {
 
 import Nav from "@/components/Nav";
 import Link from "next/link";
-
+import { wishlist, showWishlist } from "@/actions/backend";
+import { useSession } from "next-auth/react";
 export default function SearchPage() {
   const searchParams = useSearchParams();
+    const [wishlistIds, setWishlistIds] = useState([]);
+    const { data: session } = useSession();
 
   const query = searchParams.get("q");
 
@@ -56,6 +59,21 @@ export default function SearchPage() {
           setProducts([]);
           setFilteredProducts([]);
 
+             const loadWishlist = async () => {
+                if (!session?.user?.email) return;
+          
+                const data = await showWishlist(
+                );
+          
+                setWishlistIds(
+                  data.wishlist.map((item) =>
+                    item._id.toString()
+                  )
+                );
+              };
+          
+              loadWishlist();
+
           return;
         }
 
@@ -84,12 +102,34 @@ export default function SearchPage() {
 
     fetchProducts();
   }, [query]);
+  
 
+    const createwishlist = async (productId) => {
+      if (!session?.user?.email) return;
+  
+      const result = await wishlist(
+        productId,
+      );
+  
+      if (result.isWishlisted) {
+        setWishlistIds((prev) => [
+          ...prev,
+          productId.toString(),
+        ]);
+      } else {
+        setWishlistIds((prev) =>
+          prev.filter(
+            (id) => id !== productId.toString()
+          )
+        );
+      }
+    };
   // ========================================
   // PAGE
   // ========================================
 
   return (
+    
     <main className="min-h-screen bg-[#f6f6f7]">
 
       <Nav />
@@ -310,36 +350,24 @@ export default function SearchPage() {
 
                     {/* HEART */}
 
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      className="
-                        absolute
-                        top-4
-                        right-4
-                        w-11
-                        h-11
-                        rounded-full
-                        bg-white/90
-                        backdrop-blur-sm
-                        shadow-md
-                        flex
-                        items-center
-                        justify-center
-                        hover:scale-110
-                        transition
-                      "
-                    >
-
-                      <Heart
-                        size={22}
-                        className="text-slate-500"
-                      />
-
-                    </button>
+                                  <button
+                                    className="absolute top-3 right-3 h-10 w-10 rounded-full bg-slate-200 shadow-md flex items-center justify-center"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      createwishlist(product._id);
+                                    }}
+                                  >
+                                    <Heart
+                                      className={
+                                        wishlistIds.includes(
+                                          product._id.toString()
+                                        )
+                                          ? "fill-black text-black"
+                                          : "text-gray-500"
+                                      }
+                                    />
+                                  </button>
 
                   </div>
 

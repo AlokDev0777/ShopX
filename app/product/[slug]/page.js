@@ -6,6 +6,7 @@ import ProductGallery from "@/components/productgallery";
 import ProductTabs from "@/components/producttab";
 import Rightside from "@/components/rightside";
 import Script from "next/script";
+import Footer from "@/components/footer";
 
 import {
   ShoppingCart,
@@ -69,33 +70,83 @@ export default async function ProductPage({ params }) {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
               {relatedProducts.map((item) => (
-                <Link
-                  key={item._id}
-                  href={`/products/${item._id}`}
-                  className="rounded-2xl sm:rounded-[28px] overflow-hidden border shadow-sm hover:shadow-xl transition-all bg-white"
-                >
-                  <div className="relative h-40 sm:h-60 bg-slate-50">
-                    <img
-                      src={item.images[0]}
-                      alt={item.title}
-                      className="object-contain p-3 sm:p-4"
-                    />
-                  </div>
-                  <div className="p-3 sm:p-5">
-                    <h3 className="font-semibold line-clamp-2 text-[#071633] text-sm sm:text-base">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-lg sm:text-2xl font-bold">
-                      ₹{item.price}
-                    </p>
-                  </div>
-                </Link>
+               <Link
+                          href={`/product/${item._id}`}
+                          key={item._id}
+                          className="group shrink-0 w-59"
+                        >
+                          <div>
+                            <div
+                              className="
+                                relative
+                                aspect-square
+                                overflow-hidden
+                                rounded-3xl
+                                bg-white
+                                border
+                                border-zinc-200
+                                shadow-sm
+                                transition-all
+                                duration-300
+                                group-hover:shadow-lg
+                              "
+                            >
+                              <img
+                                src={item.images[0]}
+                                alt={item.title}
+                                className="
+                                  w-full
+                                  h-full
+                                  object-contain
+                                  transition-transform
+                                  duration-500
+                                  group-hover:scale-105
+                                "
+                              />
+              
+                              
+                            </div>
+              
+                            <div className="mt-3">
+                              <h3
+                                className="
+                                  mt-1
+                                  font-roboto
+                                  text-base
+                                  text-slate-900
+                                  line-clamp-2
+                                "
+                              >
+                                {item.title}
+                              </h3>
+              
+                              <div className="mt-2 flex gap-0.5">
+                                <Star size={15} className="fill-blue-800" />
+                                <Star size={15} className="fill-blue-800" />
+                                <Star size={15} className="fill-blue-800" />
+                                <Star size={15} className="fill-blue-800" />
+                                <Star size={15} />
+                              </div>
+              
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xl font-inter font-extrabold text-slate-900">
+                                  ₹{item.price}
+                                </span>
+              
+                                <span className="text-slate-400 line-through">
+                                  ₹{Math.round(item.price * 1.3)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
               ))}
             </div>
           </div>
         )}
 
       </div>
+      <Footer />
     </div>
     </>
   );

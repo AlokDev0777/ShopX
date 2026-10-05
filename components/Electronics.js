@@ -1,33 +1,35 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Laptop } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Category items — easy to extend or pull from an API later
 const ELECTRONICS_ITEMS = [
   {
     label: "Laptops",
-    href: "/product/laptops",
+    href: "/search?q=laptops",
     image: "/laptop.png",
     tag: "Best Seller",
     tagColor: "bg-blue-600",
   },
   {
     label: "MacBooks",
-    href: "/product/macbooks",
+    href: "/search?q=macbooks",
     image: "/macbook.png",
     tag: "Premium",
     tagColor: "bg-slate-900",
   },
   {
     label: "Accessories",
-    href: "/product/accessories",
+    href: "/search?q=accessories",
     image: "/organizer bag.png",
     tag: "New In",
     tagColor: "bg-emerald-600",
   },
   {
     label: "Monitors",
-    href: "/product/monitors",
+    href: "/search?q=monitors",
     image: "/Monitor.png",
     tag: "Top Rated",
     tagColor: "bg-violet-600",
@@ -35,6 +37,17 @@ const ELECTRONICS_ITEMS = [
 ];
 
 const Electronics = () => {
+  const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (query) => {
+    // Implement your search logic here, e.g., redirect to a search results page
+    console.log("Searching for:", query);
+    router.push(`/search?q=${query}`);
+
+  }
+  
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 mt-14">
       <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
@@ -56,13 +69,15 @@ const Electronics = () => {
           </div>
 
           <Link
-            href="/category/electronics"
+            href="/search?q=electronics"
             className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition shrink-0"
           >
             View All
             <ArrowRight size={15} />
           </Link>
         </div>
+
+  
 
         {/* ── Cards Grid ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-x divide-slate-100">
@@ -115,7 +130,7 @@ const Electronics = () => {
             </p>
           </div>
           <Link
-            href="/product/macbooks"
+            href="/search?q=macbooks"
             className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors"
           >
             Grab the Deal

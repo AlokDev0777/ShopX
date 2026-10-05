@@ -15,12 +15,12 @@ const menuItems = [
   {
     name: "Dashboard",
     icon: LayoutDashboard,
-    href: "/account",
+    href: "/account/customer",
   },
   {
     name: "Orders",
     icon: ShoppingBag,
-    href: "/account/orders",
+    href: "/account/customer/myorders",
   },
   {
     name: "Wishlist",
@@ -30,17 +30,13 @@ const menuItems = [
   {
     name: "Cart",
     icon: ShoppingCart,
-    href: "/cart",
+    href: "/account/customer/cart",
   },
-  {
-    name: "Addresses",
-    icon: MapPin,
-    href: "/account/addresses",
-  },
+
   {
     name: "Settings",
     icon: Settings,
-    href: "/account/settings",
+    href: "/account/customer/settings",
   },
 ];
 

@@ -6,7 +6,7 @@ import { ArrowRight, Shirt } from "lucide-react";
 const FASHION_ITEMS = [
   {
     label: "T-Shirts",
-    href: "/product/shirts",
+    href: "/search?q=t-shirts",
     image: "/t-shirt.png",
     tag: "Trending",
     tagColor: "bg-rose-500",
@@ -14,7 +14,7 @@ const FASHION_ITEMS = [
   },
   {
     label: "Cargo Pants",
-    href: "/product/jeans",
+    href: "/search?q=cargo-pants",
     image: "/jeans2.png",
     tag: "New In",
     tagColor: "bg-indigo-600",
@@ -22,7 +22,7 @@ const FASHION_ITEMS = [
   },
   {
     label: "Handbags",
-    href: "/product/handbags",
+    href: "/search?q=handbags",
     image: "/handbag.png",
     tag: "Popular",
     tagColor: "bg-amber-500",
@@ -30,7 +30,7 @@ const FASHION_ITEMS = [
   },
   {
     label: "Jackets",
-    href: "/product/jackets",
+    href: "/search?q=jackets",
     image: "/jacket.png",
     tag: "Season Pick",
     tagColor: "bg-slate-900",
@@ -60,7 +60,7 @@ const Fashion = () => {
           </div>
 
           <Link
-            href="/category/fashion"
+            href="/search?q=fashion"
             className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition shrink-0"
           >
             View All
@@ -134,7 +134,7 @@ const Fashion = () => {
             </p>
           </div>
           <Link
-            href="/category/fashion"
+            href="/search?q=fashion"
             className="relative z-10 shrink-0 bg-white hover:bg-rose-50 text-rose-600 text-sm font-bold px-5 py-2.5 rounded-xl transition-colors"
           >
             Shop Now

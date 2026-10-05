@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 import {
     User,
@@ -32,6 +33,21 @@ export default function CustomerProfile() {
 
      }
 
+    useEffect(() => {
+    if (!session) {
+        <>
+        <Nav />
+            <main className="min-h-screen bg-zinc-200">
+                <div>
+                <div className="bg-slate-800 text-xl text-white">Login</div>
+                <h3 className="text-slate-700">You need to be logged in to view this page.</h3>
+                <p className="text-slate-600">Please log in to access your account.</p>
+                </div>
+            </main>
+            </>
+    }
+}, [session, router]);
+
     return (
         <>
             <Nav />
@@ -52,7 +68,7 @@ export default function CustomerProfile() {
                         <div className="relative flex items-center gap-6">
 
                             <div className="h-20 w-20 rounded-full bg-white text-black flex items-center justify-center text-4xl font-black">
-                                A
+                                {session?.user?.name?.charAt(0)?.toUpperCase()}
                             </div>
 
                             <div>
@@ -61,7 +77,7 @@ export default function CustomerProfile() {
                                 </p>
 
                                 <h2 className=" text-2xl font-black mt-1">
-                                    Alok Kumari
+                                    {session?.user?.name} 
                                 </h2>
 
                                 <p className="mt-2 text-zinc-400">
@@ -88,10 +104,11 @@ export default function CustomerProfile() {
                             Manage Account
                         </h2>
 
-                        <div className="grid md:grid-cols-3 gap-5">
+                        <div className="grid md:grid-cols-2 gap-5">
 
                             {/* 1. Added 'group' to the button classes */}
-                            <button className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
+                            
+                            <button onClick={()=>{router.push("/account/customer/myorders")}} className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
                                 <div className="flex justify-between items-center">
                                      <div>
                                         <ShoppingBag className="text-zinc-700" />
@@ -107,7 +124,7 @@ export default function CustomerProfile() {
                                 </div>
                             </button>
 
-                            <button className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
+                            <button onClick={()=>{router.push("/account/customer/wishlist")}} className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <Heart className="text-zinc-700" />
@@ -123,24 +140,10 @@ export default function CustomerProfile() {
                             </button>
 
 
-                            <button className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <MapPin className="text-zinc-700" />
-                                        <h3 className="text-xl text-zinc-700 font-bold mt-4">
-                                            Addresses
-                                        </h3>
-                                        <p className="text-zinc-500 mt-2">
-                                            Manage shipping addresses.
-                                        </p>
-                                    </div>
-
-                                    <ChevronRight className="text-zinc-700 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
-                                </div>
-                            </button>
+                           
 
 
-                            <button className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
+                            <button onClick={()=>{router.push("/account/customer/settings")}} className="group cursor-pointer bg-white border border-zinc-100 rounded-3xl p-6 text-left w-full transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl hover:shadow-zinc-500 hover:-translate-y-1">
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <Settings className="text-zinc-700" />
@@ -178,59 +181,7 @@ export default function CustomerProfile() {
 
                     {/* Recent Orders */}
 
-                    <section className="mt-10">
-
-                        <div className="bg-white rounded-3xl border p-6">
-
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-2xl text-zinc-900 font-bold">
-                                    Recent Orders
-                                </h2>
-
-                                <button className="text-sm text-zinc-700 font-medium">
-                                    View All
-                                </button>
-                            </div>
-
-                            <div className="mt-6 space-y-4">
-
-                                <div className="border border-zinc-700 rounded-2xl p-4 flex items-center justify-between">
-                                    <div>
-                                        <h3 className="font-semibold">
-                                            Nike Air Max
-                                        </h3>
-
-                                        <p className="text-sm text-zinc-500">
-                                            Order #12345
-                                        </p>
-                                    </div>
-
-                                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                        Delivered
-                                    </span>
-                                </div>
-
-                                <div className="border border-zinc-700 rounded-2xl p-4 flex items-center justify-between">
-                                    <div>
-                                        <h3 className="font-semibold">
-                                            Wireless Headphones
-                                        </h3>
-
-                                        <p className="text-sm text-zinc-500">
-                                            Order #12346
-                                        </p>
-                                    </div>
-
-                                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                                        Processing
-                                    </span>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </section>
+                
 
                 </div>
 
