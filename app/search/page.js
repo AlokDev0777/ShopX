@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import Filters from "@/components/filters";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 import {
   Heart,
@@ -14,10 +14,12 @@ import Nav from "@/components/Nav";
 import Link from "next/link";
 import { wishlist, showWishlist } from "@/actions/backend";
 import { useSession } from "next-auth/react";
-export default function SearchPage() {
+
+function SearchContent() {
   const searchParams = useSearchParams();
-    const [wishlistIds, setWishlistIds] = useState([]);
-    const { data: session } = useSession();
+
+  const [wishlistIds, setWishlistIds] = useState([]);
+  const { data: session } = useSession();
 
   const query = searchParams.get("q");
 
@@ -59,21 +61,6 @@ export default function SearchPage() {
           setProducts([]);
           setFilteredProducts([]);
 
-             const loadWishlist = async () => {
-                if (!session?.user?.email) return;
-          
-                const data = await showWishlist(
-                );
-          
-                setWishlistIds(
-                  data.wishlist.map((item) =>
-                    item._id.toString()
-                  )
-                );
-              };
-          
-              loadWishlist();
-
           return;
         }
 
@@ -81,19 +68,16 @@ export default function SearchPage() {
           ? data.products
           : [];
 
-   
         // Original products
         setProducts(searchResults);
 
         // Initially show all search results
         setFilteredProducts(searchResults);
-
       } catch (error) {
         console.error("FETCH ERROR:", error);
 
         setProducts([]);
         setFilteredProducts([]);
-
       } finally {
         setLoading(false);
       }
@@ -101,15 +85,41 @@ export default function SearchPage() {
 
     fetchProducts();
   }, [query]);
-  
 
-    const createwishlist = async (productId) => {
+  // ========================================
+  // LOAD WISHLIST
+  // ========================================
+
+  useEffect(() => {
+    const loadWishlist = async () => {
       if (!session?.user?.email) return;
-  
-      const result = await wishlist(
-        productId,
-      );
-  
+
+      try {
+        const data = await showWishlist();
+
+        if (data?.wishlist) {
+          setWishlistIds(
+            data.wishlist.map((item) => item._id.toString())
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load wishlist:", error);
+      }
+    };
+
+    loadWishlist();
+  }, [session?.user?.email]);
+
+  // ========================================
+  // CREATE / REMOVE WISHLIST
+  // ========================================
+
+  const createwishlist = async (productId) => {
+    if (!session?.user?.email) return;
+
+    try {
+      const result = await wishlist(productId);
+
       if (result.isWishlisted) {
         setWishlistIds((prev) => [
           ...prev,
@@ -122,13 +132,16 @@ export default function SearchPage() {
           )
         );
       }
-    };
+    } catch (error) {
+      console.error("Wishlist error:", error);
+    }
+  };
+
   // ========================================
   // PAGE
   // ========================================
 
   return (
-    
     <main className="min-h-screen bg-[#f6f6f7]">
 
       <Nav />
@@ -168,7 +181,6 @@ export default function SearchPage() {
 
           </div>
 
-
           {/* ========================================
               LOADING
           ======================================== */}
@@ -194,7 +206,6 @@ export default function SearchPage() {
 
                   </div>
 
-
                   {/* TEXT SKELETON */}
 
                   <div className="mt-4 px-1">
@@ -204,7 +215,6 @@ export default function SearchPage() {
                     <div className="h-5 bg-gray-200 rounded-md w-[85%]" />
 
                     <div className="h-5 bg-gray-200 rounded-md w-[60%] mt-2" />
-
 
                     {/* RATING */}
 
@@ -220,7 +230,6 @@ export default function SearchPage() {
                       ))}
 
                     </div>
-
 
                     {/* PRICE */}
 
@@ -240,7 +249,6 @@ export default function SearchPage() {
 
             </div>
 
-
           ) : filteredProducts === null ? (
 
             /* ========================================
@@ -254,7 +262,6 @@ export default function SearchPage() {
               </h2>
 
             </div>
-
 
           ) : filteredProducts.length === 0 ? (
 
@@ -273,16 +280,13 @@ export default function SearchPage() {
 
               </div>
 
-
               <h2 className="text-4xl font-black mt-8">
                 No Products Found
               </h2>
 
-
               <p className="text-gray-500 mt-4 text-lg max-w-lg mx-auto">
                 No products match your current filters.
               </p>
-
 
               <button
                 type="button"
@@ -295,7 +299,6 @@ export default function SearchPage() {
               </button>
 
             </div>
-
 
           ) : (
 
@@ -313,9 +316,7 @@ export default function SearchPage() {
                   className="group min-w-0"
                 >
 
-                  {/* ========================================
-                      IMAGE
-                  ======================================== */}
+                  {/* IMAGE */}
 
                   <div
                     className="
@@ -346,34 +347,30 @@ export default function SearchPage() {
                       "
                     />
 
-
                     {/* HEART */}
 
-                                  <button
-                                    className="absolute top-3 right-3 h-10 w-10 rounded-full bg-slate-200 shadow-md flex items-center justify-center"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      createwishlist(product._id);
-                                    }}
-                                  >
-                                    <Heart
-                                      className={
-                                        wishlistIds.includes(
-                                          product._id.toString()
-                                        )
-                                          ? "fill-black text-black"
-                                          : "text-gray-500"
-                                      }
-                                    />
-                                  </button>
+                    <button
+                      className="absolute top-3 right-3 h-10 w-10 rounded-full bg-slate-200 shadow-md flex items-center justify-center"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        createwishlist(product._id);
+                      }}
+                    >
+                      <Heart
+                        className={
+                          wishlistIds.includes(
+                            product._id.toString()
+                          )
+                            ? "fill-black text-black"
+                            : "text-gray-500"
+                        }
+                      />
+                    </button>
 
                   </div>
 
-
-                  {/* ========================================
-                      PRODUCT INFORMATION
-                  ======================================== */}
+                  {/* PRODUCT INFORMATION */}
 
                   <div className="mt-4 px-1">
 
@@ -390,7 +387,6 @@ export default function SearchPage() {
                     >
                       {product.title}
                     </h2>
-
 
                     {/* RATING */}
 
@@ -423,7 +419,6 @@ export default function SearchPage() {
 
                     </div>
 
-
                     {/* PRICE */}
 
                     <div className="flex items-center gap-2 mt-2">
@@ -437,7 +432,6 @@ export default function SearchPage() {
                       >
                         ₹{product.discountPrice ?? product.price}
                       </span>
-
 
                       {product.discountPrice && (
 
@@ -470,5 +464,25 @@ export default function SearchPage() {
       </section>
 
     </main>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#f6f6f7]">
+          <Nav />
+
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <p className="text-gray-400 text-lg">
+              Loading search...
+            </p>
+          </div>
+        </main>
+      }
+    >
+      <SearchContent />
+    </Suspense>
   );
 }
